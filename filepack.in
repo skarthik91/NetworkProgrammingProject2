@@ -1,0 +1,22 @@
+In this assignment, we have implemented a reliable file transfer service in a
+client-service paradigm on top of an existing UDP connection. TCP like
+features have been implemented on top of this existing UDP connection to make
+the file transfer ordered and reliable.
+Following are the some of the important changes that we have implemented as
+part of this assignment:
+The server creates multiple UDP sockets to listening for incoming
+connections, one for each interface. The get_ifi_info() routine has been
+used to obtain information related to each interface. This is stored in an
+array of structures of the type conn_info_t which is defined as follows:
+Timers for detecting timeouts and retransmitting lost packets and
+acknowledgements have been implemented using the rtt_* apis provided in
+rtt.c. Since timeout values are in the sub-second range, we have used
+itimers instead of alarm().
+The functions rtt_init(), rtt_ts(), rtt_start() and rtt_stop() have been
+  modified to measure time in microseconds rather than seconds. This
+  modification has been done as the measured RTT in the compserv and sbpub
+  machines were in the sub-second range.
+All the rtt_* functions have been modified to compute and store RTT and
+  Smoothed RTT values as integers rather than floats. As part of this, struct
+  rtt_info has been modified to store rtt_rtt, rtt_srtt, rtt_rto and rtt_base
+  as type int rather than float.
